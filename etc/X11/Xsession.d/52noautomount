@@ -1,0 +1,11 @@
+# CTX OS Session Tweak: Disable GVFS Automount
+# This script prevents volumes from being mounted automatically on login.
+
+if [ -x /usr/bin/gsettings ]; then
+    gsettings set org.gnome.desktop.media-handling automount false 2>/dev/null || true
+    gsettings set org.gnome.desktop.media-handling automount-open false 2>/dev/null || true
+fi
+
+if [ -x /usr/bin/xfconf-query ]; then
+    xfconf-query -c thunar -p /volman/automount -s false 2>/dev/null || true
+fi
