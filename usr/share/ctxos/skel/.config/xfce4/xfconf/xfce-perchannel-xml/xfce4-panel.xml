@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfce4-panel" version="1.0">
+  <property name="panels" type="uint" value="1">
+    <value type="uint" value="1"/>
+  </property>
+  <property name="panel-1" type="empty">
+    <property name="autohide" type="bool" value="false"/>
+    <property name="autohide-size" type="uint" value="2"/>
+    <property name="background-alpha" type="uint" value="100"/>
+    <property name="background-color" type="uint" value="0"/>
+    <property name="desktop-file-editors" type="bool" value="true"/>
+    <property name="enter-fullscreen-on-single-window" type="bool" value="false"/>
+    <property name="icon-sizes" type="empty">
+      <property name="menu" type="string" value="16"/>
+      <property name="button" type="string" value="16"/>
+      <property name="taskbar" type="string" value="16"/>
+    </property>
+    <property name="length" type="uint" value="100"/>
+    <property name="length-adjust" type="bool" value="true"/>
+    <property name="lock-movement" type="bool" value="false"/>
+    <property name="nrows" type="uint" value="1"/>
+    <property name="position" type="string" value="p=6;x=0;y=0"/>
+    <property name="position-locked" type="bool" value="true"/>
+    <property name="show-border" type="bool" value="false"/>
+    <property name="show-handle" type="bool" value="true"/>
+    <property name="size" type="uint" value="32"/>
+    <property name="size-adjust" type="bool" value="true"/>
+    <property name="take-space" type="bool" value="true"/>
+    <property name="plugins" type="empty">
+      <property name="plugin-1" type="string" value="applicationsmenu"/>
+      <property name="plugin-2" type="string" value="tasklist"/>
+      <property name="plugin-3" type="string" value="pager"/>
+      <property name="plugin-4" type="string" value="clock"/>
+      <property name="plugin-5" type="string" value="systray"/>
+    </property>
+  </property>
+  <property name="plugin-1" type="empty">
+    <property name="active-menu" type="bool" value="false"/>
+    <property name="button-icon" type="string" value="ctxos"/>
+    <property name="button-label" type="string" value="CtxOS"/>
+    <property name="custom-menu" type="bool" value="false"/>
+    <property name="max-menu-width" type="uint" value="400"/>
+    <property name="menu-file" type="string" value=""/>
+    <property name="show-button-title" type="bool" value="true"/>
+    <property name="tooltip" type="string" value="CtxOS Applications"/>
+  </property>
+  <property name="plugin-2" type="empty">
+    <property name="grouping" type="uint" value="4"/>
+    <property name="include-all-apps" type="bool" value="true"/>
+    <property name="show-only-minimized" type="bool" value="false"/>
+    <property name="show-wireframes" type="bool" value="false"/>
+    <property name="sort-order" type="uint" value="0"/>
+    <property name="space-size" type="uint" value="1"/>
+    <property name="tooltips-enabled" type="bool" value="true"/>
+  </property>
+  <property name="plugin-3" type="empty">
+    <property name="all-workspaces" type="bool" value="true"/>
+    <property name="wrap-workspaces" type="bool" value="true"/>
+  </property>
+  <property name="plugin-4" type="empty">
+    <property name="digital-format" type="string" value="%Y-%m-%d %H:%M"/>
+    <property name="tooltip-format" type="string" value="%A %B %d, %Y"/>
+    <property name="clock-type" type="uint" value="2"/>
+  </property>
+  <property name="plugin-5" type="empty">
+    <property name="known-legacy-items" type="empty"/>
+  </property>
+</channel>

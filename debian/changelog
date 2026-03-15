@@ -1,0 +1,8 @@
+ctxos (1.0.0) stable; urgency=medium
+
+  * Initial release for CtxOS
+  * Enhanced dnsmasq configuration for security operations
+  * DNS rebind protection enabled
+  * Query logging for security monitoring
+
+ -- CtxOS Team <team@ctxos.local>  Sun, 15 Mar 2026 00:00:00 +0000

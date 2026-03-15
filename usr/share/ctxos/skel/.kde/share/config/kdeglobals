@@ -1,0 +1,155 @@
+[General]
+ColorScheme=Echo
+Name[ar]=Echo
+Name[az]=Echo
+Name[be]=Echo
+Name[bg]=Echo
+Name[bn]=Echo
+Name[br]=Echo
+Name[bs]=Echo
+Name[ca]=Echo
+Name[cs]=Echo
+Name[cy]=Echo
+Name[da]=Echo
+Name[de]=Echo
+Name[el]=Echo
+Name[en_GB]=Echo
+Name[es]=Echo
+Name[et]=Echo
+Name[eu]=Echo
+Name[fa]=Echo
+Name[fi]=Echo
+Name[fr]=Echo
+Name[ga]=Echo
+Name[gl]=Echo
+Name[gu]=Echo
+Name[he]=Echo
+Name[hi]=Echo
+Name[hr]=Echo
+Name[hu]=Echo
+Name[id]=Echo
+Name[is]=Echo
+Name[it]=Echo
+Name[ja]=Echo
+Name[ka]=Echo
+Name[kk]=Echo
+Name[km]=Echo
+Name[kn]=Echo
+Name[ko]=Echo
+Name[lt]=Echo
+Name[lv]=Echo
+Name[mr]=Echo
+Name[ms]=Echo
+Name[nb]=Echo
+Name[nds]=Echo
+Name[ne]=Echo
+Name[nl]=Echo
+Name[nn]=Echo
+Name[pa]=Echo
+Name[pl]=Echo
+Name[pt]=Echo
+Name[pt_BR]=Echo
+Name[ro]=Echo
+Name[ru]=Echo
+Name[si]=Echo
+Name[sk]=Echo
+Name[sl]=Echo
+Name[sr]=Echo
+Name[sv]=Echo
+Name[ta]=Echo
+Name[tg]=Echo
+Name[th]=Echo
+Name[tr]=Echo
+Name[tt]=Echo
+Name[ug]=Echo
+Name[uk]=Echo
+Name[uz]=Echo
+Name[vi]=Echo
+Name[xh]=Echo
+Name[zh_CN]=Echo
+Name[zh_TW]=Echo
+UseColorScheme=true
+
+[KDE]
+Contrast=4
+Shadow=0
+Shadows=1
+SettingsVersion=3
+
+[Icons]
+Theme=breath-dark
+
+[ToolbarSettings]
+IconWidth=22
+IconSize=22
+
+[ScreenScales]
+Default=1
+
+[Interface]
+AnimationDuration=200
+Autostart=false
+BlendSignals=false
+ButtonBoxLayout=true
+CursorBlinkRate=1000
+CursorBlink=true
+DayMonthYear=true
+DoubleClickInterval=400
+ForceDialogs=false
+Fonts[0]=Noto Sans,10,-1,5,50,0,0,0,0,0
+Fonts[1]=Noto Sans,10,-1,5,50,0,0,0,0,0
+Fonts[2]=Noto Sans Mono,9,-1,5,50,0,0,0,0,0
+ForceCompleteOnReturn=false
+HandPointer=false
+HideMenuBar=false
+HorizontalWheelScroll=true
+KDEvela=false
+LastActiveFirst=true
+MenusHaveIcons=true
+MenusLaunched=true
+PreviewFlash=true
+RememberDialogSize=false
+ReverseScrollArrows=false
+ScrollbarInView=false
+SelectModules=false
+ShowApplicationStatusIcon=true
+ShowCompletionPopup=true
+ShowSelectionTooltip=true
+ShowSystemTray=true
+SingleClick=false
+SpeedClickInterval=200
+Style=kde
+SyncX11Dragging=true
+ToolTipBacktrans=266
+ToolButtonStyle=0
+TransparentDnd=true
+TransparentHelperDnd=true
+WheelMouseWheel=true
+X11Drag=all
+
+[KDE Action Restrictions][$i]
+action/options_configure_keybinding=
+action/options_configure_toolbarshortcuts=
+action/options_show_toolbar=
+kconfig组的kconf_update_attach=
+
+[Plasma Actions]
+left-click:open=new
+middle-click:paste=execute=plasma-desktop --standalone-library,org.kde.plasma.noeffects.screenshots,sh -c 'qdbus org.kde.plasma-desktop /ScreenshotService screenshotMode fullscreen'
+right-click:open=menu:desktop
+
+[User Feedback]
+LastInteraction=1
+Rated=false
+
+[WM]
+activeFont[0]=Noto Sans,10,-1,5,50,0,0,0,0,0
+fixed[0]=Noto Sans Mono,9,-1,5,50,0,0,0,0,0
+font[0]=Noto Sans,10,-1,5,50,0,0,0,0,0
+legacyXftDPI=96
+messageFont[0]=Noto Sans,10,-1,5,50,0,0,0,0,0
+preferComposition=3
+respectDarkness=false
+smallCaptionFont[0]=Noto Sans,8,-1,5,50,0,0,0,0,0
+toolBarFont[0]=Noto Sans,9,-1,5,50,0,0,0,0,0
+windowTitleFont[0]=Noto Sans,10,-1,5,75,0,0,0,0,0

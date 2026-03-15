@@ -1,0 +1,58 @@
+" CtxOS Global Vim Configuration
+" System-wide settings for all Vim users
+
+" Enable syntax highlighting
+syntax on
+
+" Enable filetype detection, plugins, and indentation
+filetype plugin indent on
+
+" Show line numbers
+set number
+
+" Show relative line numbers
+set relativenumber
+
+" Enable mouse support
+if has('mouse')
+    set mouse=a
+endif
+
+" Indentation
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set smarttab
+set autoindent
+set smartindent
+
+" Search
+set ignorecase
+set smartcase
+set incsearch
+set hlsearch
+
+" UI
+set showcmd
+set showmatch
+set matchtime=2
+set wildmenu
+set laststatus=2
+
+" Colors
+colorscheme default
+
+" Backup and swap
+set nobackup
+set noswapfile
+set nowritebackup
+
+" Security
+set modelines=0
+
+" Performance
+set lazyredraw
+set synmaxcol=240
+
+" Custom CtxOS settings
+let ctxos_version = "1.0.0"

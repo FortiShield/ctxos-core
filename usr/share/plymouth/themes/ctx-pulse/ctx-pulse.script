@@ -1,0 +1,31 @@
+# CTX OS Plymouth Script
+# Animated pulse effect
+
+progress = 0;
+
+fun refresh_callback () {
+    progress += 0.01;
+    if (progress > 1) progress = 0;
+    
+    # Pulse animation
+    my_image = Image("logo.png");
+    if (my_image != nil) {
+        scaled_image = my_image.Scale (Window.GetWidth() * 0.2, Window.GetHeight() * 0.2);
+        scaled_image.SetAlpha (0.8 + 0.2 * Math.Sin (progress * 6.28));
+        scaled_image.RenderSurface (Window.GetX() + Window.GetWidth() / 2 - scaled_image.GetWidth() / 2,
+                                    Window.GetY() + Window.GetHeight() / 2 - scaled_image.GetHeight() / 2);
+    }
+}
+
+Plymouth.SetRefreshFunction (refresh_callback);
+
+# Message display
+message_sprite = Sprite ();
+message_sprite.SetPosition (Window.GetX() + 20, Window.GetY() + Window.GetHeight() - 40, 10000);
+
+fun message_callback (text) {
+    my_image = Image.Text (text, "Monospace", 16, "c0caf5", "000000");
+    message_sprite.SetImage (my_image);
+}
+
+Plymouth.SetMessageFunction (message_callback);

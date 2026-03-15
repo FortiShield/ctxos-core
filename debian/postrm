@@ -1,0 +1,56 @@
+#!/bin/sh
+set -e
+
+CTXOS_DIVERT_LIST="
+/etc/os-release
+/etc/lsb-release
+/etc/issue
+/etc/issue.net
+/etc/motd
+/etc/ssl/openssl.cnf
+"
+
+case "$1" in
+    remove)
+        echo "Removing CtxOS..."
+        
+        # Remove PostgreSQL include line
+        sed -i "/ctx_postgresql.conf/d" /etc/postgresql/*/main/postgresql.conf 2>/dev/null || true
+        
+        # Disable custom services
+        if [ -x "/usr/bin/systemctl" ]; then
+            systemctl disable ctxos-dns.service 2>/dev/null || true
+            systemctl stop ctxos-dns.service 2>/dev/null || true
+        fi
+        ;;
+    purge)
+        echo "Purging CtxOS..."
+        
+        # Remove PostgreSQL include line
+        sed -i "/ctx_postgresql.conf/d" /etc/postgresql/*/main/postgresql.conf 2>/dev/null || true
+        
+        # Disable custom services
+        if [ -x "/usr/bin/systemctl" ]; then
+            systemctl disable ctxos-dns.service 2>/dev/null || true
+            systemctl stop ctxos-dns.service 2>/dev/null || true
+        fi
+        
+        # Remove files
+        rm -rf /etc/ctxos 2>/dev/null || true
+        rm -f /var/log/ctx-update.log 2>/dev/null || true
+        rm -f /usr/share/keyrings/ctxos-archive-key.gpg 2>/dev/null || true
+        rm -f /etc/apt/sources.list.d/ctx.list 2>/dev/null || true
+        
+        # Remove dpkg diverts
+        for file in $CTXOS_DIVERT_LIST; do
+            dpkg-divert --remove --rename --package ctxos "$file" 2>/dev/null || true
+        done
+        ;;
+    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+        ;;
+    *)
+        exit 1
+        ;;
+esac
+
+exit 0

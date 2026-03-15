@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<overview xmlns="http://www.kde.org/plasma-systemmonitor/overview/1">
+    <title>CTX OS System Overview</title>
+    <description>Security Operations System Monitor Dashboard</description>
+    <columns>
+        <column>
+            <item>
+                <title>CPU Usage</title>
+                <type>sensors</type>
+                <sensor>cpu</sensor>
+                <chart>true</chart>
+                <historySize>60</historySize>
+            </item>
+            <item>
+                <title>Memory</title>
+                <type>memory</type>
+                <sensor>memory</sensor>
+                <chart>true</chart>
+            </item>
+            <item>
+                <title>Swap</title>
+                <type>memory</type>
+                <sensor>swap</sensor>
+                <chart>false</chart>
+            </item>
+        </column>
+        <column>
+            <item>
+                <title>Network</title>
+                <type>network</type>
+                <sensor>network</sensor>
+                <chart>true</chart>
+                <historySize>60</historySize>
+            </item>
+            <item>
+                <title>Disk I/O</title>
+                <type>disk</type>
+                <sensor>disk</sensor>
+                <chart>true</chart>
+            </item>
+            <item>
+                <title>Processes</title>
+                <type>processes</type>
+                <sensor>processes</sensor>
+                <sortBy>cpu</sortBy>
+                <topProcesses>10</topProcesses>
+            </item>
+        </column>
+        <column>
+            <item>
+                <title>CPU Temperature</title>
+                <type>sensors</type>
+                <sensor>cputemp</sensor>
+                <chart>true</chart>
+            </item>
+            <item>
+                <title>System Load</title>
+                <type>systemd</type>
+                <sensor>load</sensor>
+                <chart>false</chart>
+            </item>
+            <item>
+                <title>Uptime</title>
+                <type>systemd</type>
+                <sensor>uptime</sensor>
+                <chart>false</chart>
+            </item>
+        </column>
+    </columns>
+</overview>

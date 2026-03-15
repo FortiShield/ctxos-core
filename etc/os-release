@@ -1,0 +1,10 @@
+NAME="CtxOS"
+VERSION="1.0.0 (Debian Base)"
+ID=ctxos
+ID_LIKE=debian
+PRETTY_NAME="CtxOS 1.0.0 (Debian Base)"
+VERSION_ID="1.0"
+HOME_URL="https://ctxos.local/"
+SUPPORT_URL="https://ctxos.local/"
+BUG_REPORT_URL="https://ctxos.local/bugs"
+PRIVACY_POLICY="https://ctxos.local/privacy"

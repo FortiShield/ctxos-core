@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=CtxOS Pulse
+Description=CTX OS Security Pulse Theme
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/ctx-pulse
+ScriptFile=/usr/share/plymouth/themes/ctx-pulse/ctx-pulse.script

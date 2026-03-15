@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xsettings" version="1.0">
+  <property name="Net" type="empty">
+    <property name="ThemeName" type="string" value="Adwaita-dark"/>
+    <property name="IconThemeName" type="string" value="Papirus-Dark"/>
+    <property name="DoubleClickTime" type="int" value="400"/>
+    <property name="DoubleClickDistance" type="int" value="5"/>
+    <property name="DragThreshold" type="int" value="8"/>
+    <property name="MenuDelay" type="int" value="0"/>
+    <property name="MenuShowDelay" type="int" value="100"/>
+    <property name="ToolTipDelay" type="int" value="500"/>
+    <property name="ToolTipsEnabled" type="bool" value="true"/>
+    <property name="LongPressTime" type="int" value="500"/>
+    <property name="CursorTheme" type="string" value="Adwaita"/>
+    <property name="CursorThemeSize" type="int" value="24"/>
+    <property name="AltTabMode" type="bool" value="true"/>
+  </property>
+  <property name="Xfce" type="empty">
+    <property name="SortOrder" type="string" value="name"/>
+    <property name="ShowDefault" type="bool" value="true"/>
+    <property name="ShowHome" type="bool" value="true"/>
+    <property name="ShowTrash" type="bool" value="true"/>
+    <property name="ShowRemovable" type="bool" value="true"/>
+    <property name="ShowFilesystem" type="bool" value="true"/>
+    <property name="DateFormat" type="string" value="%Y-%m-%d %H:%M"/>
+    <property name="LastDateFormat" type="string" value="%Y-%m-%d %H:%M"/>
+  </property>
+  <property name="Gdk" type="empty">
+    <property name="WindowScalingFactor" type="int" value="1"/>
+    <property name="RGBAOrder" type="string" value="rgb"/>
+  </property>
+  <property name="Gtk" type="empty">
+    <property name="ApplicationPreferDarkTheme" type="bool" value="true"/>
+    <property name="MenuImages" type="bool" value="true"/>
+    <property name="ButtonImages" type="bool" value="false"/>
+    <property name="MenuAccel" type="bool" value="true"/>
+    <property name="ToolbarStyle" type="string" value="GTK_TOOLBAR_BOTH_HORIZ"/>
+    <property name="ToolbarIconSize" type="string" value="GTK_ICON_SIZE_LARGE_TOOLBAR"/>
+    <property name="IMPreeditStyle" type="string" value="GTK_IM_PREEDIT_NOTHING"/>
+    <property name="IMStatusStyle" type="string" value="GTK_IM_STATUS_NOTHING"/>
+  </property>
+  <property name="FontRendering" type="empty">
+    <property name="Antialiasing" type="int" value="1"/>
+    <property name="Hinting" type="int" value="1"/>
+    <property name="HintStyle" type="string" value="hintslight"/>
+    <property name="RGBAOrder" type="string" value="rgb"/>
+    <property name="ScaledDpi" type="int" value="98304"/>
+  </property>
+</channel>

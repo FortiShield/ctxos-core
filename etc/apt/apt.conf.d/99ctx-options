@@ -1,0 +1,4 @@
+APT::Get::Install-Recommends "false";
+APT::Get::Install-Suggests "false";
+APT::Get::AutomaticRemove "true";
+APT::Get::AllowUnauthenticated "false";

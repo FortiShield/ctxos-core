@@ -1,0 +1,54 @@
+# CtxOS Global Zsh Configuration
+# System-wide settings for all Zsh users
+
+# Version
+CTXOS_VERSION="1.0.0"
+
+# History
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt APPEND_HISTORY
+
+# Autocorrect
+setopt CORRECT
+setopt CORRECT_ALL
+
+# Completion
+autoload -Uz compinit
+compinit
+
+# Color support
+autoload -U colors && colors
+
+# Key bindings
+bindkey -e
+
+# Prompt (customizable)
+PS1="%F{green}%n@CtxOS%f:%F{blue}%~%f%# "
+
+# Editor
+export EDITOR=vim
+export VISUAL=vim
+
+# Paths
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
+export PATH="$PATH:/opt/ctxos/bin"
+
+# Aliases
+alias ll='ls -la'
+alias la='ls -A'
+alias l='ls -CF'
+alias cls='clear'
+
+# CtxOS aliases
+alias ctx-update='sudo ctx-update'
+alias ctx-logs='sudo journalctl -xe'
+alias ctx-net='sudo netstat -tulpn'
+alias ctx-services='sudo systemctl list-units --type=service'
+
+# Local config (if exists)
+[ -f /etc/zsh/zshrc.local ] && source /etc/zsh/zshrc.local

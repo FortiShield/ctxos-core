@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: ctxos
+Upstream-Contact: CtxOS Team <team@ctxos.local>
+Source: https://ctxos.local
+
+Files: *
+Copyright: 2026 CtxOS Team
+License: GPL-3+

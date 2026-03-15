@@ -1,0 +1,19 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "admin@ctxos.local",
+                "Name": "CTX OS Team"
+            }
+        ],
+        "Description": "The official unified look and feel for CTX OS.",
+        "Id": "Ctx_Theme",
+        "Name": "Ctx Theme",
+        "ServiceTypes": [
+            "Plasma/LookAndFeel"
+        ],
+        "Version": "1.0",
+        "Website": "https://ctxos.local"
+    },
+    "KPackageStructure": "Plasma/LookAndFeel"
+}

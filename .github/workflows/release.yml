@@ -1,0 +1,61 @@
+name: CTX OS CI/CD
+
+on:
+  push:
+    branches: [main, testing]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y debhelper devscripts reprepro gpg gpg-agent wget
+
+      - name: Install dpkg-dev
+        run: |
+          sudo apt-get install -y dpkg-dev
+
+      - name: Import GPG Key
+        if: env.GPG_PRIVATE_KEY != ''
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 -d | gpg --import --batch --yes
+          echo "allow-preset-passphrase" >> ~/.gnupg/gpg-agent.conf 2>/dev/null || true
+
+      - name: Build Debian Package
+        run: |
+          chmod +x bin/*.sh debian/rules debian/postinst debian/postrm debian/preinst debian/prerm
+          debuild -us -uc
+          mkdir -p build_assets
+          cp ../ctxos-core*.deb build_assets/ 2>/dev/null || true
+
+      - name: Update Reprepro Repository
+        run: |
+          TARGET_BRANCH="testing"
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            TARGET_BRANCH="bookworm"
+          fi
+          
+          echo "Building for: $TARGET_BRANCH"
+          
+          if [ -d "debian" ]; then
+            echo "Debian directory found"
+          fi
+
+      - name: Create Release Artifacts
+        run: |
+          mkdir -p release
+          cp ../ctxos-core*.deb release/ 2>/dev/null || echo "No .deb found"
+          ls -la release/
+
+      - name: Upload Release Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ctxos-packages
+          path: release/
+          retention-days: 30

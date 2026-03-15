@@ -1,0 +1,6 @@
+[Configuration]
+FileManager=Thunar
+WebBrowser=firefox
+MailReader=thunderbird
+TerminalEmulator=xfce4-terminal
+FileManagerOpen=thunar

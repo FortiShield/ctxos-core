@@ -1,0 +1,25 @@
+#!/bin/bash
+
+LOGO_PATH="/usr/share/ctxos/ascii-logo.txt"
+
+OS_NAME=$(grep '^NAME=' /etc/os-release 2>/dev/null | cut -d'=' -f2 | tr -d '"')
+KERNEL=$(uname -sr 2>/dev/null)
+UPTIME=$(uptime -p 2>/dev/null | sed 's/up //')
+SHELL_NAME=$SHELL
+MEM_USED=$(free -m 2>/dev/null | awk '/Mem:/ { print $3 }')
+MEM_TOTAL=$(free -m 2>/dev/null | awk '/Mem:/ { print $2 }')
+
+C1='\033[0;34m'
+C2='\033[0;36m'
+NC='\033[0m'
+
+if [ -f "$LOGO_PATH" ]; then
+    cat "$LOGO_PATH"
+fi
+
+echo -e "${C1}OS:${NC}       $OS_NAME"
+echo -e "${C1}Kernel:${NC}   $KERNEL"
+echo -e "${C1}Uptime:${NC}   $UPTIME"
+echo -e "${C1}Shell:${NC}    $SHELL_NAME"
+echo -e "${C1}Memory:${NC}   ${MEM_USED}MB / ${MEM_TOTAL}MB"
+echo ""

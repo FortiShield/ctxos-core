@@ -1,0 +1,39 @@
+Source: ctxos-core
+Section: misc
+Priority: optional
+Maintainer: CtxOS Team <team@ctxos.local>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.5.1
+
+Package: ctxos-core
+Architecture: all
+Depends: 
+    ${misc:Depends},
+    bash,
+    curl,
+    systemd,
+    sed,
+    grep
+Recommends:
+    plasma-systemmonitor,
+    powershell,
+    xfce4,
+    xfce4-terminal,
+    xfce4-taskmanager,
+    firefox-esr | firefox,
+    dolphin,
+    konsole,
+    kwrite,
+    samba,
+    postgresql,
+    xrdp,
+    xorgxrdp,
+    fish,
+    zsh,
+    vim,
+    udev
+Description: Core configuration and branding for CTX OS.
+ This package provides the foundational overlay for the CTX OS 
+ environment. It includes system-wide performance tuning for 
+ PostgreSQL, custom shell configurations, desktop environment 
+ branding for XFCE and KDE, and developer templates.

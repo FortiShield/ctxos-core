@@ -1,0 +1,27 @@
+# CtxOS PostgreSQL Low Memory Configuration
+# For systems with limited RAM
+
+# Reduce connection pool
+max_connections = 20
+
+# Minimal buffers
+shared_buffers = 64MB
+effective_cache_size = 128MB
+work_mem = 8MB
+
+# Reduce checkpoint frequency
+checkpoint_completion_target = 0.7
+min_wal_size = 256MB
+max_wal_size = 1GB
+
+# Disable features not needed on low-memory systems
+max_worker_processes = 2
+max_parallel_workers_per_gather = 0
+max_parallel_workers = 0
+
+# Reduce WAL
+wal_level = minimal
+max_wal_senders = 0
+
+# Logging
+log_min_duration_statement = 1000

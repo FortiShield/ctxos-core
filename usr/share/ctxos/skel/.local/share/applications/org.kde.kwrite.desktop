@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Text Editor (KWrite)
+Exec=kwrite %U
+Icon=accessories-text-editor
+Type=Application
+Categories=Qt;KDE;Utility;TextEditor;
+StartupNotify=true
+MimeType=text/plain;

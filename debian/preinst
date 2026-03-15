@@ -1,0 +1,33 @@
+#!/bin/sh
+set -e
+
+CTXOS_DIVERT_LIST="
+/etc/os-release
+/etc/lsb-release
+/etc/issue
+/etc/issue.net
+/etc/motd
+/etc/ssl/openssl.cnf
+"
+
+case "$1" in
+    install)
+        echo "Installing CtxOS..."
+        for file in $CTXOS_DIVERT_LIST; do
+            if [ -f "$file" ] && [ ! -L "$file" ]; then
+                dpkg-divert --add --rename --package ctxos "$file" 2>/dev/null || true
+            fi
+        done
+        ;;
+    upgrade)
+        echo "Upgrading CtxOS..."
+        ;;
+    abort-upgrade)
+        echo "Aborting CtxOS upgrade..."
+        ;;
+    *)
+        exit 1
+        ;;
+esac
+
+exit 0

@@ -1,0 +1,9 @@
+[Configuration]
+ShowAllProcesses=TRUE
+ViewMode=1
+UpdateInterval=1000
+GraphStyle=0
+ShowThreads=TRUE
+ShowProgramPath=FALSE
+ShowIcons=TRUE
+ColorSchemes=0
