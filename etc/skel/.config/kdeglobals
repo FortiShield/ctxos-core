@@ -75,6 +75,7 @@ Contrast=4
 Shadow=0
 Shadows=1
 SettingsVersion=3
+LookAndFeelPackage=Ctx_Theme
 
 [Icons]
 Theme=breath-dark
