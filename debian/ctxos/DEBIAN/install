@@ -1,2 +1,3 @@
 etc/ctxos/dnsmasq.conf etc/ctxos/
+etc/ctx/debian_version etc/ctx/
 DEBIAN/ctxos-dns.service usr/lib/systemd/system/
