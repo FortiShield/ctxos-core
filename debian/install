@@ -31,6 +31,7 @@ etc/skel/.emacs etc/skel/
 etc/skel/.dmrc etc/skel/
 etc/skel/.xsession etc/skel/
 etc/skel/.local/share/applications/*.desktop etc/skel/.local/share/applications/
+etc/skel/.local/share/plasma-systemmonitor/overview.page etc/skel/.local/share/plasma-systemmonitor/
 etc/skel/.zshrc etc/skel/
 etc/skel/.vimrc etc/skel/
 etc/skel/.config/mimeapps.list etc/skel/.config/

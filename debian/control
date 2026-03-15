@@ -15,6 +15,7 @@ Depends:
     sed,
     grep
 Recommends:
+    plasma-systemmonitor,
     xfce4,
     xfce4-terminal,
     xfce4-taskmanager,
