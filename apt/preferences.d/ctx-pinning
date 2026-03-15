@@ -1,0 +1,11 @@
+Package: *
+Pin: release n=bookworm
+Pin-Priority: 100
+
+Package: ctxos
+Pin: origin ctxos.local
+Pin-Priority: 990
+
+Package: dnsmasq
+Pin: release n=bookworm-security
+Pin-Priority: 990
