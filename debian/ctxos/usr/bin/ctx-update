@@ -1,0 +1,45 @@
+#!/bin/bash
+set -e
+
+CTX_UPDATE_LOG="/var/log/ctx-update.log"
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$CTX_UPDATE_LOG"
+}
+
+log "CtxOS Update Started"
+
+if command -v apt-get &> /dev/null; then
+    log "Updating package lists..."
+    apt-get update -qq
+    
+    log "Upgrading packages..."
+    apt-get upgrade -y -qq
+    
+    log "Checking for security updates..."
+    apt-get update -qq
+    apt-get upgrade -y -qq -o Dpkg::Options::="--force-confdef"
+    
+    log "Cleaning up..."
+    apt-get autoremove -y -qq
+    apt-get autoclean -qq
+    
+    log "CtxOS Update Completed Successfully"
+elif command -v dnf &> /dev/null; then
+    log "Using DNF package manager..."
+    dnf check-update -q
+    dnf update -y -q
+    log "CtxOS Update Completed Successfully"
+elif command -v pacman &> /dev/null; then
+    log "Using Pacman package manager..."
+    pacman -Syu --noconfirm
+    log "CtxOS Update Completed Successfully"
+else
+    log "ERROR: No supported package manager found"
+    exit 1
+fi
+
+log "Restarting DNS service..."
+systemctl restart dnsmasq 2>/dev/null || true
+
+log "Done."

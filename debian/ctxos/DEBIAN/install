@@ -1,3 +1,12 @@
-etc/ctxos/dnsmasq.conf etc/ctxos/
 etc/ctx/debian_version etc/ctx/
+etc/dpkg/origins/ctx etc/dpkg/origins/
+etc/os-release etc/
+etc/lsb-release etc/
+etc/issue etc/
+etc/issue.net etc/
+etc/motd etc/
+etc/resolv.conf.head etc/
+etc/ctxos/dnsmasq.conf etc/ctxos/
+root/.bashrc root/
+usr/bin/ctx-update usr/bin/
 DEBIAN/ctxos-dns.service usr/lib/systemd/system/
