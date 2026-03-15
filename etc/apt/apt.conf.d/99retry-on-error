@@ -1,0 +1,7 @@
+Acquire::http::Pipeline-Depth "5";
+Acquire::http::No-Cache "false";
+Acquire::ftp::Pipeline-Depth "5";
+DPkg::Options {
+   "--force-confdef";
+   "--force-confold";
+};

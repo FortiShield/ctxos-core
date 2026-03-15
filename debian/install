@@ -3,6 +3,7 @@ bin/ctx-update usr/bin/
 etc/NetworkManager/conf.d/ctxos.conf etc/NetworkManager/conf.d/
 etc/apt/apt.conf.d/99ctx-options etc/apt/apt.conf.d/
 etc/apt/apt.conf.d/99ctx-timeout etc/apt/apt.conf.d/
+etc/apt/apt.conf.d/99retry-on-error etc/apt/apt.conf.d/
 etc/apt/sources.list.d/ctx.list etc/apt/sources.list.d/
 etc/ctx/debian_version etc/ctx/
 etc/cloud/cloud.cfg.d/ctx.cfg etc/cloud/cloud.cfg.d/
