@@ -1,4 +1,4 @@
-apt/preferences.d/ctx-pinning apt/preferences.d/
+etc/apt/preferences.d/ctx-pinning etc/apt/preferences.d/
 bin/ctx-update usr/bin/
 etc/NetworkManager/conf.d/ctxos.conf etc/NetworkManager/conf.d/
 etc/apt/apt.conf.d/99ctx-options etc/apt/apt.conf.d/
