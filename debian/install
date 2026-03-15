@@ -10,6 +10,7 @@ etc/cloud/cloud.cfg.d/ctx.cfg etc/cloud/cloud.cfg.d/
 etc/dnsmasq.d/ctxos.conf etc/dnsmasq.d/
 etc/dpkg/dpkg.cfg.d/ctxos etc/dpkg/dpkg.cfg.d/
 etc/dpkg/origins/ctx etc/dpkg/origins/
+etc/fish/conf.d/ctxos-settings.fish etc/fish/conf.d/
 etc/issue etc/
 etc/issue.net etc/
 etc/lsb-release etc/
@@ -18,4 +19,5 @@ etc/os-release etc/
 etc/profile.d/ctxos-env.sh etc/profile.d/
 etc/profile.d/ctxos-history.sh etc/profile.d/
 etc/resolv.conf.head etc/
+usr/share/ctxos/skel/.config/fish/config.fish etc/skel/.config/fish/
 lib/systemd/system/ctxos-dns.service lib/systemd/system/
