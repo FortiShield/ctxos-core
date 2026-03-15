@@ -1,0 +1,13 @@
+[Default Applications]
+inode/directory=org.kde.dolphin.desktop
+text/plain=org.kde.kwrite.desktop
+application/json=kwrite.desktop
+text/x-python=kwrite.desktop
+text/html=kwrite.desktop
+
+[Added Associations]
+inode/directory=org.kde.dolphin.desktop
+text/plain=org.kde.kwrite.desktop,kwrite.desktop
+application/json=org.kde.kwrite.desktop,kwrite.desktop
+text/x-python=org.kde.kwrite.desktop,kwrite.desktop
+text/html=org.kde.kwrite.desktop,kwrite.desktop

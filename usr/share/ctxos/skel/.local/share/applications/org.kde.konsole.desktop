@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=CTX Terminal (Konsole)
+Comment=Low latency shell access
+Exec=konsole
+Icon=utilities-terminal
+Type=Application
+Categories=Qt;KDE;System;TerminalEmulator;
+StartupNotify=true
+Terminal=false
