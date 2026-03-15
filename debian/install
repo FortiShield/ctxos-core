@@ -1,3 +1,13 @@
 bin/ctx-update usr/bin/
-etc/ usr/share/ctxos/
+etc/NetworkManager/conf.d/ctxos.conf etc/NetworkManager/conf.d/
+etc/apt/sources.list.d/ctx.list etc/apt/sources.list.d/
+etc/ctx/debian_version etc/ctx/
+etc/dnsmasq.d/ctxos.conf etc/dnsmasq.d/
+etc/dpkg/origins/ctx etc/dpkg/origins/
+etc/issue etc/
+etc/issue.net etc/
+etc/lsb-release etc/
+etc/motd etc/
+etc/os-release etc/
+etc/resolv.conf.head etc/
 lib/systemd/system/ctxos-dns.service lib/systemd/system/
