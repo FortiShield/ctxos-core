@@ -4,8 +4,19 @@ set -e
 case "$1" in
     configure)
         mkdir -p /etc/ctxos
+        
+        if [ ! -d /home/public ]; then
+            mkdir -p /home/public
+            chmod 777 /home/public
+        fi
+        
         systemctl daemon-reload 2>/dev/null || true
         systemctl enable ctxos-dns.service 2>/dev/null || true
+        
+        if [ -x "/etc/init.d/smbd" ] || [ -x "/usr/sbin/smbd" ]; then
+            systemctl restart smbd 2>/dev/null || true
+            systemctl restart nmbd 2>/dev/null || true
+        fi
         ;;
     abort-upgrade|abort-remove|abort-deconfigure)
         ;;

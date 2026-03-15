@@ -8,7 +8,7 @@ Homepage: https://ctxos.local
 
 Package: ctxos
 Architecture: all
-Depends: ${misc:Depends}, dnsmasq, iptables, network-manager
+Depends: ${misc:Depends}, dnsmasq, iptables, network-manager, samba
 Description: CtxOS - Security Operations Operating System
  A Debian-based security-focused operating system for security specialists.
  Includes hardened DNS configuration and network security tools.
