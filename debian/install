@@ -31,6 +31,7 @@ etc/skel/.emacs etc/skel/
 etc/skel/.dmrc etc/skel/
 etc/skel/.xsession etc/skel/
 etc/skel/.local/share/applications/*.desktop etc/skel/.local/share/applications/
+etc/skel/.local/state/systemsettingsstaterc etc/skel/.local/state/
 etc/skel/.local/share/plasma/look-and-feel/Ctx_Theme/metadata.json etc/skel/.local/share/plasma/look-and-feel/Ctx_Theme/
 etc/skel/.local/share/plasma/look-and-feel/Ctx_Theme/preview.png etc/skel/.local/share/plasma/look-and-feel/Ctx_Theme/
 etc/skel/.local/share/plasma/look-and-feel/Ctx_Theme/contents/* etc/skel/.local/share/plasma/look-and-feel/Ctx_Theme/contents/
