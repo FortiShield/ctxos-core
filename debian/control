@@ -1,15 +1,37 @@
-Source: ctxos
-Section: admin
+Source: ctxos-core
+Section: misc
 Priority: optional
 Maintainer: CtxOS Team <team@ctxos.local>
 Build-Depends: debhelper-compat (= 13)
-Standards-Version: 4.6.2
-Homepage: https://ctxos.local
+Standards-Version: 4.5.1
 
-Package: ctxos
+Package: ctxos-core
 Architecture: all
-Depends: ${misc:Depends}, bash, curl, systemd
-Recommends: dnsmasq, iptables, network-manager, samba, postgresql, xrdp, xfce4, fish, zsh, vim, xorg
-Description: CtxOS - Security Operations Operating System
- A Debian-based security-focused operating system for security specialists.
- Includes hardened DNS configuration and network security tools.
+Depends: 
+    ${misc:Depends},
+    bash,
+    curl,
+    systemd,
+    sed,
+    grep
+Recommends:
+    xfce4,
+    xfce4-terminal,
+    xfce4-taskmanager,
+    firefox-esr | firefox,
+    dolphin,
+    konsole,
+    kwrite,
+    samba,
+    postgresql,
+    xrdp,
+    xorgxrdp,
+    fish,
+    zsh,
+    vim,
+    udev
+Description: Core configuration and branding for CTX OS.
+ This package provides the foundational overlay for the CTX OS 
+ environment. It includes system-wide performance tuning for 
+ PostgreSQL, custom shell configurations, desktop environment 
+ branding for XFCE and KDE, and developer templates.
