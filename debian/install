@@ -20,6 +20,7 @@ etc/profile.d/ctxos-env.sh etc/profile.d/
 etc/profile.d/ctxos-history.sh etc/profile.d/
 etc/resolv.conf.head etc/
 etc/X11/Xsession.d/52noautomount etc/X11/Xsession.d/
+etc/xrdp/xrdp.ini etc/xrdp/
 etc/postgresql/ctx_postgresql.conf etc/postgresql/
 etc/postgresql/postgresql_reduce_shared_buffers etc/postgresql/
 etc/samba/smb.conf etc/samba/
@@ -27,6 +28,7 @@ etc/skel/.bashrc etc/skel/
 etc/skel/.profile etc/skel/
 etc/skel/.emacs etc/skel/
 etc/skel/.dmrc etc/skel/
+etc/skel/.xsession etc/skel/
 etc/skel/.local/share/applications/*.desktop etc/skel/.local/share/applications/
 etc/skel/.zshrc etc/skel/
 etc/skel/.vimrc etc/skel/

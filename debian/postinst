@@ -31,6 +31,11 @@ case "$1" in
             fi
             systemctl restart postgresql 2>/dev/null || true
         fi
+        
+        if [ -x "/usr/sbin/xrdp" ] || [ -x "/usr/sbin/xrdp-sesman" ]; then
+            systemctl restart xrdp 2>/dev/null || true
+            systemctl restart xrdp-sesman 2>/dev/null || true
+        fi
         ;;
     abort-upgrade|abort-remove|abort-deconfigure)
         ;;
