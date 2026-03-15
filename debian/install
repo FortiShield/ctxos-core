@@ -2,6 +2,7 @@ bin/ctx-update usr/bin/
 etc/NetworkManager/conf.d/ctxos.conf etc/NetworkManager/conf.d/
 etc/apt/sources.list.d/ctx.list etc/apt/sources.list.d/
 etc/ctx/debian_version etc/ctx/
+etc/cloud/cloud.cfg.d/ctx.cfg etc/cloud/cloud.cfg.d/
 etc/dnsmasq.d/ctxos.conf etc/dnsmasq.d/
 etc/dpkg/origins/ctx etc/dpkg/origins/
 etc/issue etc/
