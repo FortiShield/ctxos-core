@@ -1,1 +1,2 @@
-dnsmasq.conf etc/
+etc/ctxos/dnsmasq.conf etc/ctxos/
+DEBIAN/ctxos-dns.service usr/lib/systemd/system/
