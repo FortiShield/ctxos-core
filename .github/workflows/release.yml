@@ -3,10 +3,26 @@ name: CTX OS CI/CD
 on:
   push:
     branches: [main, testing]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Run ShellCheck
+        run: |
+          find bin/ -type f -name '*.sh' -o -name 'ctx-*' -o -name 'ftpsync*' -o -name 'runmirrors' -o -name 'rsync-*' -o -name 'mirror-*' -o -name 'archive_*' -o -name 'common' -o -name 'include-*' | xargs shellcheck -x
+
   build-and-deploy:
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
