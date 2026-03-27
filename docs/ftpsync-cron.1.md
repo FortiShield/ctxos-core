@@ -29,8 +29,10 @@ run, thus learning whether the upstream mirror has updated.  If it has,
 
 Example use in a user crontab:
 
-  SHELL=/bin/bash
-  31 * * * * sleep $(( RANDOM \% 1800 )) && ./bin/ftpsync-cron
+```cron
+SHELL=/bin/bash
+31 * * * * sleep $(( RANDOM \% 1800 )) && ./bin/ftpsync-cron
+```
 
 # SEE ALSO
 **ftpsync**(1) +
