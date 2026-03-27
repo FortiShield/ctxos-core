@@ -1,0 +1,130 @@
+#!/bin/bash
+# CTX OS FTP Repository Sync
+# Syncs a local reprepro Debian repository to a remote FTP server.
+
+set -euo pipefail
+
+LOCAL_DIR="${CTXOS_REPO_DIR:-/var/lib/ctxos/debian}"
+FTP_HOST="${CTXOS_FTP_HOST:-}"
+FTP_USER="${CTXOS_FTP_USER:-anonymous}"
+FTP_PASS="${CTXOS_FTP_PASS:-}"
+FTP_PATH="${CTXOS_FTP_PATH:-/debian}"
+LOG_FILE="${CTXOS_FTPSYNC_LOG:-/var/log/ctxos-ftpsync.log}"
+DRY_RUN=0
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+}
+
+usage() {
+    echo "Usage: $(basename "$0") [OPTIONS]"
+    echo ""
+    echo "Sync local CTX OS repository to a remote FTP server."
+    echo ""
+    echo "Options:"
+    echo "  -H, --host HOST        FTP server hostname (required)"
+    echo "  -u, --user USER        FTP username (default: anonymous)"
+    echo "  -p, --pass PASS        FTP password"
+    echo "  -P, --path PATH        Remote path on FTP server (default: /debian)"
+    echo "  -l, --local DIR        Local repo directory (default: /var/lib/ctxos/debian)"
+    echo "  -n, --dry-run          Show what would be synced without uploading"
+    echo "  -h, --help             Show this help message"
+    echo ""
+    echo "Environment variables:"
+    echo "  CTXOS_FTP_HOST         FTP server hostname"
+    echo "  CTXOS_FTP_USER         FTP username"
+    echo "  CTXOS_FTP_PASS         FTP password"
+    echo "  CTXOS_FTP_PATH         Remote path (default: /debian)"
+    echo "  CTXOS_REPO_DIR         Local repo directory"
+    echo "  CTXOS_FTPSYNC_LOG      Log file path"
+    exit 1
+}
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -H|--host)  FTP_HOST="$2"; shift 2 ;;
+        -u|--user)  FTP_USER="$2"; shift 2 ;;
+        -p|--pass)  FTP_PASS="$2"; shift 2 ;;
+        -P|--path)  FTP_PATH="$2"; shift 2 ;;
+        -l|--local) LOCAL_DIR="$2"; shift 2 ;;
+        -n|--dry-run) DRY_RUN=1; shift ;;
+        -h|--help)  usage ;;
+        *) echo "Unknown option: $1"; usage ;;
+    esac
+done
+
+if [ -z "$FTP_HOST" ]; then
+    echo "ERROR: FTP host is required."
+    usage
+fi
+
+if [ ! -d "$LOCAL_DIR" ]; then
+    echo "ERROR: Local repository not found: $LOCAL_DIR"
+    echo "Set CTXOS_REPO_DIR or use --local to specify the path."
+    exit 1
+fi
+
+if ! command -v lftp &>/dev/null; then
+    echo "ERROR: lftp is not installed."
+    echo "Install it with: apt-get install lftp"
+    exit 1
+fi
+
+# Normalize remote path
+FTP_PATH="${FTP_PATH%/}"
+
+echo "============================================"
+echo "  CTX OS FTP Sync"
+echo "============================================"
+echo ""
+echo "Local:     $LOCAL_DIR"
+echo "Remote:    ftp://${FTP_HOST}${FTP_PATH}"
+echo "User:      $FTP_USER"
+echo "Dry run:   $([ "$DRY_RUN" -eq 1 ] && echo "yes" || echo "no")"
+echo ""
+
+log "FTP sync started: ${LOCAL_DIR} -> ftp://${FTP_HOST}${FTP_PATH}"
+
+LFTP_CREDENTIALS=()
+if [ -n "$FTP_PASS" ]; then
+    LFTP_CREDENTIALS=(-u "${FTP_USER},${FTP_PASS}")
+else
+    LFTP_CREDENTIALS=(-u "${FTP_USER}")
+fi
+
+MIRROR_CMD="mirror --delete --verbose --parallel=4 --use-cache"
+if [ "$DRY_RUN" -eq 1 ]; then
+    MIRROR_CMD="mirror --delete --verbose --parallel=4 --use-cache --dry-run"
+fi
+
+lftp "${LFTP_CREDENTIALS[@]}" "$FTP_HOST" <<LFTP_SCRIPT
+set net:timeout 30
+set net:max-retries 3
+set net:reconnect-interval-base 5
+set ftp:list-options -a
+set ftp:passive-mode on
+
+cd "$FTP_PATH" || mkdir -p "$FTP_PATH"
+cd "$FTP_PATH"
+$MIRROR_CMD "$LOCAL_DIR" .
+quit
+LFTP_SCRIPT
+
+RESULT=$?
+
+if [ $RESULT -eq 0 ]; then
+    if [ "$DRY_RUN" -eq 1 ]; then
+        log "Dry run completed successfully"
+        echo ""
+        echo "✅ Dry run complete. No files were uploaded."
+    else
+        log "FTP sync completed successfully"
+        echo ""
+        echo "✅ Sync complete: ftp://${FTP_HOST}${FTP_PATH}"
+    fi
+else
+    log "FTP sync failed (exit code: $RESULT)"
+    echo ""
+    echo "❌ Sync failed. Check $LOG_FILE for details."
+    exit 1
+fi

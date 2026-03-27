@@ -1,0 +1,12 @@
+# CTX OS ShellCheck Configuration
+# https://github.com/koalaman/shellcheck/wiki/Directive
+
+# Allow sourcing external files without warnings
+disable=SC1090
+disable=SC1091
+
+# Allow use of 'cd' without explicit error handling in subshells
+disable=SC2103
+
+# Allow unassigned variables used as defaults (e.g., ${VAR:-default})
+disable=SC2269

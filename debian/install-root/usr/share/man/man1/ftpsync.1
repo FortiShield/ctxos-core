@@ -1,0 +1,33 @@
+.TH FTPSYNC 1 "2026-03-27" "ctxos-core 1.0.0" "CTX OS Manual"
+.SH NAME
+ftpsync \- sync local repository to remote FTP server
+.SH SYNOPSIS
+.B ftpsync
+.RI [ options ]
+.SH DESCRIPTION
+Syncs a local reprepro Debian repository to a remote FTP server using lftp.
+.SH OPTIONS
+.TP
+.BR \-H ", " \-\-host " " \fIHOST\fR
+FTP server hostname (required).
+.TP
+.BR \-u ", " \-\-user " " \fIUSER\fR
+FTP username.
+.TP
+.BR \-p ", " \-\-pass " " \fIPASS\fR
+FTP password.
+.TP
+.BR \-P ", " \-\-path " " \fIPATH\fR
+Remote path on FTP server.
+.TP
+.BR \-l ", " \-\-local " " \fIDIR\fR
+Local repository directory.
+.TP
+.BR \-n ", " \-\-dry\-run
+Show what would be synced without uploading.
+.SH ENVIRONMENT
+.TP
+CTXOS_FTP_HOST, CTXOS_FTP_USER, CTXOS_FTP_PASS, CTXOS_FTP_PATH, CTXOS_REPO_DIR
+.SH SEE ALSO
+.BR ftpsync\-cron (1),
+.BR reprepro (1)

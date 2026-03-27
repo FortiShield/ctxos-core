@@ -1,0 +1,213 @@
+#!/bin/bash
+# CTX OS Git Include
+# Clones a git repository, builds its Debian package, and includes it in the local reprepro repo.
+
+set -e
+
+REPO_DIR="${CTXOS_REPO_DIR:-/var/lib/ctxos/debian}"
+CODENAME="${CTXOS_CODENAME:-bookworm}"
+WORK_DIR="${CTXOS_INCLUDE_WORKDIR:-/tmp/ctxos-include}"
+LOG_FILE="${CTXOS_INCLUDE_LOG:-/var/log/ctxos-include-git.log}"
+TAG_ON_SUCCESS="${CTXOS_INCLUDE_TAG:-0}"
+FORCE=0
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+}
+
+usage() {
+    echo "Usage: $(basename "$0") [OPTIONS] <GIT_URL_OR_PATH> [BUILD_ARGS...]"
+    echo ""
+    echo "Clone a git repo, build its Debian package, and include in reprepro."
+    echo ""
+    echo "Options:"
+    echo "  -c, --codename NAME    Target codename (default: bookworm)"
+    echo "  -r, --repo DIR         Local reprepro repo directory"
+    echo "  -w, --workdir DIR      Working directory for clones (default: /tmp/ctxos-include)"
+    echo "  -t, --tag              Tag successful builds in the source repo"
+    echo "  -f, --force            Force rebuild even if version already exists"
+    echo "  -h, --help             Show this help"
+    echo ""
+    echo "Environment variables:"
+    echo "  CTXOS_REPO_DIR         Local reprepro repo directory"
+    echo "  CTXOS_CODENAME         Target suite codename"
+    echo "  CTXOS_INCLUDE_WORKDIR  Working directory for clones"
+    echo "  CTXOS_INCLUDE_LOG      Log file path"
+    echo "  CTXOS_INCLUDE_TAG      Set to 1 to tag on success"
+    echo ""
+    echo "Examples:"
+    echo "  $(basename "$0") https://github.com/user/package.git"
+    echo "  $(basename "$0") -c trixie /home/dev/my-package"
+    echo "  $(basename "$0") -t https://github.com/user/package.git v1.2.0"
+    exit 1
+}
+
+GIT_URL=""
+BUILD_ARGS=()
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -c|--codename) CODENAME="$2"; shift 2 ;;
+        -r|--repo)     REPO_DIR="$2"; shift 2 ;;
+        -w|--workdir)  WORK_DIR="$2"; shift 2 ;;
+        -t|--tag)      TAG_ON_SUCCESS=1; shift ;;
+        -f|--force)    FORCE=1; shift ;;
+        -h|--help)     usage ;;
+        --)            shift; BUILD_ARGS+=("$@"); break ;;
+        -*)
+            echo "Unknown option: $1"
+            usage
+            ;;
+        *)
+            if [ -z "$GIT_URL" ]; then
+                GIT_URL="$1"
+            else
+                BUILD_ARGS+=("$1")
+            fi
+            shift
+            ;;
+    esac
+done
+
+if [ -z "$GIT_URL" ]; then
+    echo "ERROR: Git URL or path is required."
+    usage
+fi
+
+if [ ! -d "$REPO_DIR" ]; then
+    echo "ERROR: Local reprepro repo not found: $REPO_DIR"
+    exit 1
+fi
+
+if ! command -v reprepro &>/dev/null; then
+    echo "ERROR: reprepro is not installed."
+    echo "Install with: apt-get install reprepro"
+    exit 1
+fi
+
+if ! command -v git &>/dev/null; then
+    echo "ERROR: git is not installed."
+    exit 1
+fi
+
+echo "============================================"
+echo "  CTX OS Git Include"
+echo "============================================"
+echo ""
+
+mkdir -p "$WORK_DIR"
+
+# Determine source: URL vs local path
+if [ -d "$GIT_URL" ]; then
+    SRC_DIR="$(cd "$GIT_URL" && pwd)"
+    REPO_NAME="$(basename "$SRC_DIR")"
+    IS_CLONE=0
+    log "Using local source: $SRC_DIR"
+else
+    REPO_NAME="$(basename "$GIT_URL" .git)"
+    CLONE_DIR="$WORK_DIR/$REPO_NAME"
+
+    if [ -d "$CLONE_DIR" ]; then
+        log "Updating existing clone: $CLONE_DIR"
+        git -C "$CLONE_DIR" fetch --prune
+    else
+        log "Cloning: $GIT_URL"
+        git clone --depth=1 "$GIT_URL" "$CLONE_DIR"
+    fi
+    SRC_DIR="$CLONE_DIR"
+    IS_CLONE=1
+fi
+
+# Checkout optional ref (first BUILD_ARG that looks like a tag/branch/commit)
+if [ ${#BUILD_ARGS[@]} -gt 0 ]; then
+    REF="${BUILD_ARGS[0]}"
+    if git -C "$SRC_DIR" rev-parse "$REF" &>/dev/null; then
+        log "Checking out ref: $REF"
+        git -C "$SRC_DIR" checkout "$REF" 2>/dev/null || \
+            git -C "$SRC_DIR" fetch origin "$REF":"$REF" 2>/dev/null && \
+            git -C "$SRC_DIR" checkout "$REF" 2>/dev/null || true
+        BUILD_ARGS=("${BUILD_ARGS[@]:1}")
+    fi
+fi
+
+# Verify it's a Debian package
+if [ ! -d "$SRC_DIR/debian" ]; then
+    echo "ERROR: No debian/ directory found in $REPO_NAME"
+    echo "This script only builds Debian-packaged projects."
+    exit 1
+fi
+
+# Read package info
+PKG_NAME="$(dpkg-parsechangelog -l "$SRC_DIR/debian/changelog" -S Source 2>/dev/null || echo "")"
+PKG_VERSION="$(dpkg-parsechangelog -l "$SRC_DIR/debian/changelog" -S Version 2>/dev/null || echo "")"
+
+if [ -z "$PKG_NAME" ] || [ -z "$PKG_VERSION" ]; then
+    echo "ERROR: Could not parse package name/version from debian/changelog"
+    exit 1
+fi
+
+echo "Package:  $PKG_NAME"
+echo "Version:  $PKG_VERSION"
+echo "Codename: $CODENAME"
+echo "Source:   $REPO_NAME"
+echo ""
+
+# Check if already included
+if [ "$FORCE" -eq 0 ]; then
+    EXISTING=$(reprepro -b "$REPO_DIR" list "$CODENAME" "$PKG_NAME" 2>/dev/null | awk '{print $3}' || true)
+    if [ -n "$EXISTING" ] && [ "$EXISTING" = "$PKG_VERSION" ]; then
+        log "Package $PKG_NAME ($PKG_VERSION) already in repo, skipping"
+        echo "Already included: $PKG_NAME ($PKG_VERSION)"
+        echo "Use --force to rebuild."
+        exit 0
+    fi
+fi
+
+# Build
+log "Building $PKG_NAME ($PKG_VERSION)..."
+echo "🛠️ Building package..."
+
+(
+    cd "$SRC_DIR"
+    if [ -f "debian/rules" ]; then
+        if [ ${#BUILD_ARGS[@]} -gt 0 ]; then
+            dpkg-buildpackage -us -uc -b "${BUILD_ARGS[@]}" 2>&1
+        else
+            dpkg-buildpackage -us -uc -b 2>&1
+        fi
+    else
+        echo "ERROR: debian/rules not found"
+        exit 1
+    fi
+) | tee -a "$LOG_FILE"
+
+# Find and include .deb
+DEB_FILE="$(ls -t "$SRC_DIR"/../"${PKG_NAME}"_*.deb 2>/dev/null | head -n 1)"
+
+if [ -z "$DEB_FILE" ] || [ ! -f "$DEB_FILE" ]; then
+    echo "ERROR: No .deb produced for $PKG_NAME"
+    exit 1
+fi
+
+log "Including $(basename "$DEB_FILE") in $CODENAME repo..."
+echo ""
+echo "📥 Including in repository..."
+
+reprepro -b "$REPO_DIR" includedeb "$CODENAME" "$DEB_FILE"
+
+log "Included: $(basename "$DEB_FILE")"
+
+# Optional: tag source repo
+if [ "$TAG_ON_SUCCESS" -eq 1 ] && [ -d "$SRC_DIR/.git" ]; then
+    TAG_NAME="included/${PKG_NAME}_${PKG_VERSION}"
+    if git -C "$SRC_DIR" rev-parse "$TAG_NAME" &>/dev/null; then
+        log "Tag $TAG_NAME already exists"
+    else
+        log "Tagging source: $TAG_NAME"
+        git -C "$SRC_DIR" tag "$TAG_NAME"
+    fi
+fi
+
+echo ""
+echo "✅ Included: $PKG_NAME ($PKG_VERSION) -> $CODENAME"
+echo ""

@@ -1,7 +1,6 @@
 #!/bin/bash
 # CTX OS Developer Setup Script
-
-set -e
+set -euo pipefail
 
 echo "============================================"
 echo "  CTX OS Developer Environment Setup"

@@ -1,0 +1,25 @@
+.TH RUNMIRRORS 1 "2026-03-27" "ctxos-core 1.0.0" "CTX OS Manual"
+.SH NAME
+runmirrors \- push mirrors to downstream servers
+.SH SYNOPSIS
+.B runmirrors
+.RI [ \-a " NAME" ]
+.RI [ \-k " TYPE" ]
+.RI [ \-f ]
+.SH DESCRIPTION
+Pushes repository mirrors to downstream servers using rsync over SSH.
+Supports single-hop, multi-hop, and staged push modes.
+.SH OPTIONS
+.TP
+.BR \-a " " \fINAME\fR
+Use NAME as the config file suffix.
+.TP
+.BR \-k " " \fITYPE\fR
+Push type: all, stage2, mhop. Default: mhop.
+.TP
+.BR \-f
+Run from within ftpsync.
+.SH SEE ALSO
+.BR ftpsync (1),
+.BR runmirrors.conf (5),
+.BR runmirrors.mirror (5)

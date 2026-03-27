@@ -1,0 +1,163 @@
+#!/bin/bash
+# Common library for CTX OS mirror tools
+# Shared functions and variables for ftpsync, runmirrors, and related scripts.
+
+set -e
+set -u
+set -o pipefail
+
+# Directories (overridden by include-install or include-tar)
+BASEDIR=${BASEDIR:-"$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"}
+BINDIR=${BINDIR:-"$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"}
+CONFDIRS=${CONFDIRS-("${BASEDIR}/etc" ~/.config/ftpsync /etc/ftpsync)}
+LOCKDIR=${LOCKDIR:-"${BASEDIR}/locks"}
+LOGDIR=${LOGDIR:-"${BASEDIR}/log"}
+PROGRAM=${PROGRAM:-"$(basename "$(readlink -f "$0")")"}
+VERSION="${VERSION:-dev}"
+
+# Search for a config file in CONFDIRS
+search_config() {
+    local name="$1"
+    for dir in "${CONFDIRS[@]}"; do
+        if [[ -f "${dir}/${name}" ]]; then
+            echo "${dir}/${name}"
+            return 0
+        fi
+    done
+    return 1
+}
+
+# Read configuration file and source it
+read_config() {
+    local name="$1"
+    local conf
+    conf=$(search_config "$name" 2>/dev/null) || return 0
+    # shellcheck disable=SC1090
+    . "$conf"
+}
+
+# Create log directory
+create_logdir() {
+    if [[ ! -d "${LOGDIR}" ]]; then
+        mkdir -p "${LOGDIR}"
+    fi
+}
+
+# Create lock directory
+create_lockdir() {
+    if [[ ! -d "${LOCKDIR}" ]]; then
+        mkdir -p "${LOCKDIR}"
+    fi
+}
+
+# Log a message (to stdout and optionally to a file descriptor)
+LOG_FD=""
+log() {
+    local msg="[$(date '+%Y-%m-%d %H:%M:%S')] [${PROGRAM}] $1"
+    echo "$msg"
+    if [[ -n "${LOG_FD}" ]] && [[ -e "/proc/$$/fd/${LOG_FD}" ]]; then
+        echo "$msg" >&"${LOG_FD}"
+    fi
+}
+
+# Log an error message
+error() {
+    local msg="[$(date '+%Y-%m-%d %H:%M:%S')] [${PROGRAM}] ERROR: $1"
+    echo "$msg" >&2
+    if [[ -n "${LOG_FD}" ]] && [[ -e "/proc/$$/fd/${LOG_FD}" ]]; then
+        echo "$msg" >&"${LOG_FD}"
+    fi
+}
+
+# Log rotation using savelog
+savelog() {
+    local logfile="$1"
+    local rotate="${LOGROTATE:-14}"
+
+    if [[ -f "$logfile" ]]; then
+        local i
+        for (( i = rotate; i > 0; i-- )); do
+            local prev=$(( i - 1 ))
+            if [[ $prev -eq 0 ]]; then
+                [[ -f "$logfile" ]] && mv "$logfile" "${logfile}.1"
+            else
+                [[ -f "${logfile}.${prev}" ]] && mv "${logfile}.${prev}" "${logfile}.${i}"
+            fi
+        done
+    fi
+}
+
+# Open a log file descriptor
+open_log() {
+    local logfile="$1"
+    create_logdir
+    exec {LOG_FD}>>"$logfile"
+}
+
+# Close the log file descriptor
+close_log() {
+    if [[ -n "${LOG_FD}" ]] && [[ -e "/proc/$$/fd/${LOG_FD}" ]]; then
+        exec {LOG_FD}>&-
+    fi
+}
+
+# Run a hook script if configured
+hook() {
+    local hooknr="${HOOKNR:-}"
+    local hookscr="${HOOKSCR:-}"
+
+    if [[ -n "${hookscr}" ]] && [[ -x "${hookscr}" ]]; then
+        log "Running hook ${hooknr}: ${hookscr}"
+        "${hookscr}"
+    fi
+}
+
+# Execute a mirror signal/action
+signal() {
+    local -a opts=("$@")
+    local mirror="" hostname="" username="" sshtype="" sshkey="" sshopts=""
+    local pushlockown="" pushtype="" pusharchive="" pushkind="" fromftpsync=""
+
+    for opt in "${opts[@]}"; do
+        case "$opt" in
+            MIRROR=*)       mirror="${opt#MIRROR=}" ;;
+            HOSTNAME=*)     hostname="${opt#HOSTNAME=}" ;;
+            USERNAME=*)     username="${opt#USERNAME=}" ;;
+            SSHPROTO=*)     sshtype="${opt#SSHPROTO=}" ;;
+            SSHKEY=*)       sshkey="${opt#SSHKEY=}" ;;
+            SSHOPTS=*)      sshopts="${opt#SSHOPTS=}" ;;
+            PUSHLOCKOWN=*)  pushlockown="${opt#PUSHLOCKOWN=}" ;;
+            PUSHTYPE=*)     pushtype="${opt#PUSHTYPE=}" ;;
+            PUSHARCHIVE=*)  pusharchive="${opt#PUSHARCHIVE=}" ;;
+            PUSHKIND=*)     pushkind="${opt#PUSHKIND=}" ;;
+            FROMFTPSYNC=*)  fromftpsync="${opt#FROMFTPSYNC=}" ;;
+        esac
+    done
+
+    log "Pushing mirror ${mirror} to ${hostname} (type=${pushtype}, kind=${pushkind})"
+}
+
+# Get the list of 2-stage mirrors
+get2stage() {
+    local mirrors="${MIRRORS:-}"
+    if [[ -z "$mirrors" ]] || [[ ! -f "$mirrors" ]]; then
+        return 0
+    fi
+    grep -E '^[[:space:]]*(staged|mhop)' "$mirrors" | awk '{print $2}' || true
+}
+
+# Wait for push lock files
+wait_for_pushlocks() {
+    local timeout="${1:-600}"
+    local elapsed=0
+    local lockfile="${LOCKDIR}/all_stage1"
+
+    while [[ $elapsed -lt $timeout ]]; do
+        if [[ -f "$lockfile" ]]; then
+            return 0
+        fi
+        sleep 5
+        elapsed=$(( elapsed + 5 ))
+    done
+    return 1
+}

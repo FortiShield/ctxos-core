@@ -1,0 +1,82 @@
+#!/bin/bash
+# CTX OS FTP Sync Cron Wrapper
+# Silent cron-friendly wrapper around ftpsync with locking and error handling.
+
+set -e
+
+CONF_FILE="${CTXOS_FTPSYNC_CONF:-/etc/ctxos/ftpsync.conf}"
+LOCK_FILE="${CTXOS_FTPSYNC_LOCK:-/run/lock/ctxos-ftpsync.lock}"
+LOG_FILE="${CTXOS_FTPSYNC_LOG:-/var/log/ctxos-ftpsync.log}"
+RETRIES="${CTXOS_FTPSYNC_RETRIES:-3}"
+RETRY_DELAY="${CTXOS_FTPSYNC_RETRY_DELAY:-60}"
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE"
+}
+
+cleanup() {
+    rm -f "$LOCK_FILE"
+}
+
+# Load config file if present
+if [ -f "$CONF_FILE" ]; then
+    # shellcheck disable=SC1090
+    . "$CONF_FILE"
+fi
+
+# Acquire lock
+exec 9>"$LOCK_FILE"
+if ! flock -n 9; then
+    log "ERROR: Another instance is running (lock: $LOCK_FILE)"
+    exit 1
+fi
+trap cleanup EXIT
+
+# Determine ftpsync location
+FTPSYNC="$(command -v ftpsync 2>/dev/null)"
+if [ -z "$FTPSYNC" ]; then
+    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+    if [ -x "$SCRIPT_DIR/ftpsync" ]; then
+        FTPSYNC="$SCRIPT_DIR/ftpsync"
+    else
+        log "ERROR: ftpsync not found"
+        exit 1
+    fi
+fi
+
+# Build argument list from config vars
+FTPSYNC_ARGS=()
+[ -n "$CTXOS_FTP_HOST" ] && FTPSYNC_ARGS+=(-H "$CTXOS_FTP_HOST")
+[ -n "$CTXOS_FTP_USER" ] && FTPSYNC_ARGS+=(-u "$CTXOS_FTP_USER")
+[ -n "$CTXOS_FTP_PASS" ] && FTPSYNC_ARGS+=(-p "$CTXOS_FTP_PASS")
+[ -n "$CTXOS_FTP_PATH" ] && FTPSYNC_ARGS+=(-P "$CTXOS_FTP_PATH")
+[ -n "$CTXOS_REPO_DIR" ] && FTPSYNC_ARGS+=(-l "$CTXOS_REPO_DIR")
+
+# Pass extra args from the environment
+if [ -n "$CTXOS_FTPSYNC_ARGS" ]; then
+    # shellcheck disable=SC2206
+    FTPSYNC_ARGS+=($CTXOS_FTPSYNC_ARGS)
+fi
+
+log "Cron sync started (retries=$RETRIES)"
+
+ATTEMPT=1
+while [ $ATTEMPT -le $RETRIES ]; do
+    if OUTPUT=$("$FTPSYNC" "${FTPSYNC_ARGS[@]}" 2>&1); then
+        log "Sync succeeded (attempt $ATTEMPT)"
+        exit 0
+    fi
+
+    RESULT=$?
+    log "Sync failed (attempt $ATTEMPT/$RETRIES, exit=$RESULT): $OUTPUT"
+
+    if [ $ATTEMPT -lt $RETRIES ]; then
+        log "Retrying in ${RETRY_DELAY}s..."
+        sleep "$RETRY_DELAY"
+    fi
+
+    ATTEMPT=$((ATTEMPT + 1))
+done
+
+log "ERROR: All $RETRIES attempts failed"
+exit 1

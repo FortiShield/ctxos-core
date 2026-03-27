@@ -1,0 +1,25 @@
+.TH RUNMIRRORS.MIRROR 5 "2026-03-27" "ctxos-core 1.0.0" "CTX OS Manual"
+.SH NAME
+runmirrors.mirror \- mirror definitions for runmirrors
+.SH DESCRIPTION
+Defines the list of downstream mirrors for runmirrors.
+Each line specifies a mirror entry.
+.SH FORMAT
+Lines starting with # are comments. Each non-empty line has the format:
+.PP
+.RS
+\fITYPE NAME HOSTNAME USER SSHOPTS\fR
+.RE
+.SH TYPES
+.TP
+.B staged
+Push to a staging area.
+.TP
+.B mhop
+Multi-hop push.
+.TP
+.B DELAY
+Insert a delay between pushes.
+.SH SEE ALSO
+.BR runmirrors (1),
+.BR runmirrors.conf (5)

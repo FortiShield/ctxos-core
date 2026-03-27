@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 CTX_UPDATE_LOG="/var/log/ctx-update.log"
 

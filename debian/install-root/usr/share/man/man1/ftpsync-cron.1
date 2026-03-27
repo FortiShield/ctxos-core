@@ -1,0 +1,12 @@
+.TH FTPSYNC-CRON 1 "2026-03-27" "ctxos-core 1.0.0" "CTX OS Manual"
+.SH NAME
+ftpsync-cron \- cron wrapper for ftpsync with locking and retries
+.SH SYNOPSIS
+.B ftpsync-cron
+.SH DESCRIPTION
+Silent cron-friendly wrapper around ftpsync. Uses flock to prevent overlapping
+runs, retries on failure, and logs to /var/log/ctxos-ftpsync.log.
+.SH CONFIGURATION
+Reads /etc/ctxos/ftpsync.conf if present.
+.SH SEE ALSO
+.BR ftpsync (1)

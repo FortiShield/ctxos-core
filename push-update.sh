@@ -1,10 +1,9 @@
 #!/bin/bash
 # CTX OS Build & GitHub Deploy Automation
+set -euo pipefail
 
-REPO_DIR="/path/to/your/local/ctxos.github.io/repo"
+REPO_DIR="${CTXOS_REPO_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
 CODENAME="bookworm"
-
-set -e
 
 echo "📦 Step 1: Building the package..."
 debuild -us -uc

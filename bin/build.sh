@@ -1,7 +1,6 @@
 #!/bin/bash
 # CTX OS Build Script
-
-set -e
+set -euo pipefail
 
 echo "============================================"
 echo "  CTX OS Package Builder"
