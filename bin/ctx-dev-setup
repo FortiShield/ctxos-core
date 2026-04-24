@@ -33,10 +33,12 @@ fi
 if ! command -v docker &> /dev/null; then
     echo "🐳 Setting up Docker..."
     if command -v apt-get &> /dev/null; then
-        curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+        curl -fsSL -o /tmp/docker.gpg https://download.docker.com/linux/debian/gpg
+        sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg /tmp/docker.gpg
         echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
         sudo apt-get update -qq
-        sudo apt-get install -y -qq docker-ce docker-ce-cli containerd.io docker-compose-plugin || true
+        sudo apt-get install -y -qq docker-ce docker-ce-cli containerd.io docker-compose-plugin
+        rm -f /tmp/docker.gpg
     fi
 fi
 
@@ -44,21 +46,23 @@ fi
 if ! command -v node &> /dev/null; then
     echo "🟢 Setting up Node.js..."
     if command -v apt-get &> /dev/null; then
-        curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-        sudo apt-get install -y -qq nodejs || true
+        curl -fsSL -o /tmp/nodesource-setup.sh https://deb.nodesource.com/setup_lts.x
+        sudo -E bash /tmp/nodesource-setup.sh
+        sudo apt-get install -y -qq nodejs
+        rm -f /tmp/nodesource-setup.sh
     fi
 fi
 
-# 4. Install VS Code (if not present)
+# 4. Install Visual Studio Code (if on Debian/Ubuntu)
 if ! command -v code &> /dev/null; then
     echo "💻 Setting up VS Code..."
     if command -v apt-get &> /dev/null; then
-        wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-        sudo install -D -o root -g root -m 644 packages.microsoft.gpg /usr/share/keyrings/packages.microsoft.gpg
-        sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
-        rm -f packages.microsoft.gpg
+        curl -fsSL -o /tmp/vscode.gpg https://packages.microsoft.com/keys/microsoft.asc
+        sudo gpg --dearmor -o /usr/share/keyrings/packages-microsoft-keyring.gpg /tmp/vscode.gpg
+        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/packages-microsoft-keyring.gpg] https://packages.microsoft.com/repos/code stable main" | sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null
         sudo apt-get update -qq
-        sudo apt-get install -y -qq code || true
+        sudo apt-get install -y -qq code
+        rm -f /tmp/vscode.gpg
     fi
 fi
 
@@ -70,7 +74,7 @@ if command -v apt-get &> /dev/null; then
         python3-pip \
         python3-venv \
         python3-dev \
-        python3-setuptools || true
+        python3-setuptools
 fi
 
 # 6. Local HTTPS Development (SSL)
@@ -82,15 +86,15 @@ cd "$CERT_DIR"
 
 if [ ! -f "ctxos-rootCA.key" ]; then
     openssl genrsa -out ctxos-rootCA.key 4096
-    
+
     openssl req -x509 -new -nodes -key ctxos-rootCA.key -sha256 -days 3650 \
         -config /etc/ssl/openssl.cnf \
         -subj "/C=US/ST=CTX-State/L=CTX-City/O=CTX OS Project/CN=CTX-Dev-Root-CA" \
         -out ctxos-rootCA.pem
-    
+
     sudo cp ctxos-rootCA.pem /usr/local/share/ca-certificates/ctxos-rootCA.crt
     sudo update-ca-certificates
-    
+
     echo "✅ Local CA installed. Your system now trusts certificates signed by CTX OS."
 else
     echo "ℹ️ Local CA already exists. Skipping generation."
@@ -102,10 +106,10 @@ if [ ! -f "localhost.crt" ]; then
     openssl req -new -nodes -out localhost.csr -newkey rsa:4096 \
         -keyout localhost.key \
         -subj "/C=US/ST=CTX-State/L=CTX-City/O=CTX OS Project/CN=localhost"
-    
+
     openssl x509 -req -in localhost.csr -CA ctxos-rootCA.pem -CAkey ctxos-rootCA.key \
         -CAcreateserial -out localhost.crt -days 365 -sha256
-    
+
     rm -f localhost.csr
     echo "✅ localhost certificate created in $CERT_DIR"
 fi

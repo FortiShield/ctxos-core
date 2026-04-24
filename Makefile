@@ -7,7 +7,7 @@ mandir = /usr/share/man
 man1dir = ${mandir}/man1
 man5dir = ${mandir}/man5
 
-MAN1 = ftpsync ftpsync-cron rsync-ssl-tunnel runmirrors
+MAN1 = ftpsync ftpsync-cron rsync-ssl-tunnel runmirrors ctx-about ctx-update ctx-dev-setup
 MAN5 = ftpsync.conf runmirrors.conf runmirrors.mirror
 SCRIPTS = ftpsync ftpsync-cron rsync-ssl-tunnel runmirrors
 ALL = $(MAN1:%=docs/%.1) $(MAN5:%=docs/%.5) $(SCRIPTS:%=bin/%.install) $(SCRIPTS:%=bin/%.install-tar)

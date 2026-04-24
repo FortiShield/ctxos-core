@@ -7,13 +7,16 @@ Standards-Version: 4.5.1
 
 Package: ctxos-core
 Architecture: all
-Depends: 
+Depends:
     ${misc:Depends},
     bash,
     curl,
     systemd,
     sed,
-    grep
+    grep,
+    lftp,
+    rsync,
+    stunnel4 | socat
 Recommends:
     plasma-systemmonitor,
     powershell,
@@ -33,7 +36,7 @@ Recommends:
     vim,
     udev
 Description: Core configuration and branding for CTX OS.
- This package provides the foundational overlay for the CTX OS 
- environment. It includes system-wide performance tuning for 
- PostgreSQL, custom shell configurations, desktop environment 
+ This package provides the foundational overlay for the CTX OS
+ environment. It includes system-wide performance tuning for
+ PostgreSQL, custom shell configurations, desktop environment
  branding for XFCE and KDE, and developer templates.

@@ -31,15 +31,43 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc shellcheck
+          sudo apt-get install -y pandoc shellcheck kcov
           git clone https://github.com/bats-core/bats-core.git /tmp/bats-core
           echo "/tmp/bats-core/bin" >> $GITHUB_PATH
 
       - name: Build Project
         run: make clean && make all
 
-      - name: Run BATS Tests
-        run: bats tests/
+      - name: Run BATS Tests with Coverage
+        run: |
+          mkdir -p coverage
+          kcov --bash-hack=on --exclude-pattern=.*test.* coverage bats tests/
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          directory: coverage
+          fail_below_threshold: false
+
+  security-scan:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/gpg | sudo apt-key add -
+          echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+
+      - name: Run Trivy Filesystem Scan
+        run: |
+          trivy fs --severity HIGH,CRITICAL --exit-code 1 .
 
   build-and-deploy:
     needs: lint
