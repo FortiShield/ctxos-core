@@ -23,9 +23,9 @@ set -e
 set -u
 set -o pipefail
 
-BINDIR=$(dirname $(readlink -f "$0")); . "${BINDIR}/include-git" ## INCLUDE COMMON
+BINDIR=$(dirname "$(readlink -f "$0")"); . "${BINDIR}/include-git" ## INCLUDE COMMON
 
-NAME="$(basename $0)"
+NAME="$(basename "$0")"
 
 HELP="$0\n
 Usage:\n\n
@@ -63,12 +63,12 @@ if [[ $# -gt 0 ]]; then
                     ;;
                 f)  FROMFTPSYNC="true"
                     ;;
-                h)  echo -e $HELP
+                h)  echo -e "$HELP"
                     exit 0
                     ;;
 
                 *)  echo "Invalid usage"
-                    echo -e $HELP 
+                    echo -e "$HELP"
                     exit 1
                     ;;
             esac
@@ -151,9 +151,9 @@ log "Pushing leaf mirrors. Inside ftpsync: ${FROMFTPSYNC}. Pushkind: ${PUSHKIND}
 
 HOOK=(
     HOOKNR=1
-    HOOKSCR=${HOOK1}
+    HOOKSCR="${HOOK1}"
 )
-hook $HOOK
+hook "${HOOK[@]}"
 
 # From here on we do *NOT* want to exit on errors. We don't want to
 # stop pushing mirrors just because we can't reach one of them.

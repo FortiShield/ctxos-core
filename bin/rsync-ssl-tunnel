@@ -40,7 +40,7 @@ Usage: $0 [OPTION]... RSYNC_HOST"
   -p  the port (default: 1873)
   -h  display this help and exit
 EOF
-  exit $1
+    exit 1
 }
 
 while getopts C:hl:m:p: option; do
@@ -53,7 +53,7 @@ while getopts C:hl:m:p: option; do
     ?) usage 64 >&2 ;;
   esac
 done
-shift $(($OPTIND - 1))
+    shift $((OPTIND - 1))
 
 if [[ "$#" = 0 ]]; then
   echo >&2 "No arguments given."
