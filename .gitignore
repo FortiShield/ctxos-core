@@ -1,0 +1,23 @@
+# Build artifacts
+*.deb
+*.changes
+*.buildinfo
+*.dsc
+
+# Generated files
+bin/*.install
+bin/*.install-tar
+docs/*.1
+docs/*.5
+
+# Debian packaging
+debian/.debhelper/
+debian/ctx-tarball/
+debian/files
+debian/*.debhelper.log
+debian/*.substvars
+debian/ctxos-core/
+
+# Test artifacts
+tests/bin/
+*.bats.bats

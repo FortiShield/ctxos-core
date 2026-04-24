@@ -54,13 +54,11 @@ case "$1" in
         chmod 644 /etc/apt/preferences.d/ctx-pinning || true
         chmod 644 /etc/apt/sources.list.d/ctx.list || true
 
-        # 6. Import GPG key for CTX OS repository
+        # 6. GPG key for CTX OS repository
+        # Note: GPG key should be included in the package (debian/install-root/usr/share/keyrings/)
+        # The key file should be placed at /usr/share/keyrings/ctxos-archive-key.gpg
         if [ ! -f /usr/share/keyrings/ctxos-archive-key.gpg ] && [ ! -f /etc/apt/keyrings/ctxos-archive-key.gpg ]; then
-            if [ -x /usr/bin/curl ]; then
-                echo "Importing CTX OS Repository Key from GitHub..."
-                mkdir -p /usr/share/keyrings
-                curl -sL https://ctxos.github.io/debian/ctxos-archive-key.gpg | gpg --dearmor -o /usr/share/keyrings/ctxos-archive-key.gpg 2>/dev/null || true
-            fi
+            echo "WARNING: CTX OS GPG key not found. Please install it manually."
         fi
 
         # 7. Desktop: Update icon cache if you added any

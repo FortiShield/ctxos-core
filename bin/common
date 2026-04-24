@@ -53,7 +53,8 @@ create_lockdir() {
 # Log a message (to stdout and optionally to a file descriptor)
 LOG_FD=""
 log() {
-    local msg="[$(date '+%Y-%m-%d %H:%M:%S')] [${PROGRAM}] $1"
+    local msg
+    msg="[$(date '+%Y-%m-%d %H:%M:%S')] [${PROGRAM}] $1"
     echo "$msg"
     if [[ -n "${LOG_FD}" ]] && [[ -e "/proc/$$/fd/${LOG_FD}" ]]; then
         echo "$msg" >&"${LOG_FD}"
@@ -62,7 +63,8 @@ log() {
 
 # Log an error message
 error() {
-    local msg="[$(date '+%Y-%m-%d %H:%M:%S')] [${PROGRAM}] ERROR: $1"
+    local msg
+    msg="[$(date '+%Y-%m-%d %H:%M:%S')] [${PROGRAM}] ERROR: $1"
     echo "$msg" >&2
     if [[ -n "${LOG_FD}" ]] && [[ -e "/proc/$$/fd/${LOG_FD}" ]]; then
         echo "$msg" >&"${LOG_FD}"

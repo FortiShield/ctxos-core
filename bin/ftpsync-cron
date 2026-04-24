@@ -2,7 +2,7 @@
 # CTX OS FTP Sync Cron Wrapper
 # Silent cron-friendly wrapper around ftpsync with locking and error handling.
 
-set -e
+set -euo pipefail
 
 CONF_FILE="${CTXOS_FTPSYNC_CONF:-/etc/ctxos/ftpsync.conf}"
 LOCK_FILE="${CTXOS_FTPSYNC_LOCK:-/run/lock/ctxos-ftpsync.lock}"
@@ -61,7 +61,7 @@ fi
 log "Cron sync started (retries=$RETRIES)"
 
 ATTEMPT=1
-while [ $ATTEMPT -le $RETRIES ]; do
+while [ "$ATTEMPT" -le "$RETRIES" ]; do
     if OUTPUT=$("$FTPSYNC" "${FTPSYNC_ARGS[@]}" 2>&1); then
         log "Sync succeeded (attempt $ATTEMPT)"
         exit 0
@@ -70,7 +70,7 @@ while [ $ATTEMPT -le $RETRIES ]; do
     RESULT=$?
     log "Sync failed (attempt $ATTEMPT/$RETRIES, exit=$RESULT): $OUTPUT"
 
-    if [ $ATTEMPT -lt $RETRIES ]; then
+    if [ "$ATTEMPT" -lt "$RETRIES" ]; then
         log "Retrying in ${RETRY_DELAY}s..."
         sleep "$RETRY_DELAY"
     fi

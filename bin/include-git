@@ -2,7 +2,7 @@
 # CTX OS Git Include
 # Clones a git repository, builds its Debian package, and includes it in the local reprepro repo.
 
-set -e
+set -euo pipefail
 
 REPO_DIR="${CTXOS_REPO_DIR:-/var/lib/ctxos/debian}"
 CODENAME="${CTXOS_CODENAME:-bookworm}"
@@ -101,7 +101,6 @@ mkdir -p "$WORK_DIR"
 if [ -d "$GIT_URL" ]; then
     SRC_DIR="$(cd "$GIT_URL" && pwd)"
     REPO_NAME="$(basename "$SRC_DIR")"
-    IS_CLONE=0
     log "Using local source: $SRC_DIR"
 else
     REPO_NAME="$(basename "$GIT_URL" .git)"
@@ -115,7 +114,6 @@ else
         git clone --depth=1 "$GIT_URL" "$CLONE_DIR"
     fi
     SRC_DIR="$CLONE_DIR"
-    IS_CLONE=1
 fi
 
 # Checkout optional ref (first BUILD_ARG that looks like a tag/branch/commit)

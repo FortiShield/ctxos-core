@@ -21,6 +21,26 @@ jobs:
         run: |
           find bin/ -type f -name '*.sh' -o -name 'ctx-*' -o -name 'ftpsync*' -o -name 'runmirrors' -o -name 'rsync-*' -o -name 'mirror-*' -o -name 'archive_*' -o -name 'common' -o -name 'include-*' | xargs shellcheck -x
 
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc shellcheck
+          git clone https://github.com/bats-core/bats-core.git /tmp/bats-core
+          echo "/tmp/bats-core/bin" >> $GITHUB_PATH
+
+      - name: Build Project
+        run: make clean && make all
+
+      - name: Run BATS Tests
+        run: bats tests/
+
   build-and-deploy:
     needs: lint
     runs-on: ubuntu-latest
@@ -56,9 +76,9 @@ jobs:
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             TARGET_BRANCH="bookworm"
           fi
-          
+
           echo "Building for: $TARGET_BRANCH"
-          
+
           if [ -d "debian" ]; then
             echo "Debian directory found"
           fi
